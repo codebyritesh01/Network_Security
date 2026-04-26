@@ -3,7 +3,7 @@ import sys
 # Here we use sys.exc_info() to get details of the current exception:
 # error type, error object, and traceback information.
 
-from logging import logger
+from logging import Logger;
 
 # Custom exception class
 # It inherits from Python's built-in Exception class
