@@ -106,6 +106,8 @@ class ModelTrainer:
         Network_Model=NetworkModel(preprocessor=preprocessor,model=best_model)
         save_object(self.model_trainer_config.trained_model_file_path,obj=NetworkModel)
 
+        save_object("Final_model/model.pkl",best_model)
+
         ##Model Trainer Artifact
         model_trainer_artifact=ModelTrainerArtifact(
             trained_model_file_path=self.model_trainer_config.trained_model_file_path,
@@ -115,13 +117,8 @@ class ModelTrainer:
         logging.info(f"Model trainer artifact:{model_trainer_artifact}")
         return model_trainer_artifact
 
-
-
-
-
-
         
-    def initate_model_trainer(self)->ModelTrainerArtifact:
+    def initiate_model_trainer(self)->ModelTrainerArtifact:
         try:
             train_file_path = self.data_transformation_artifact.transformed_train_file_path
             test_file_path = self.data_transformation_artifact.transformed_test_file_path
