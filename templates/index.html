@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetGuard | AI Phishing Detection</title>
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5; /* Indigo 600 */
+            --secondary: #0ea5e9;
+            --safe: #059669;
+            --danger: #dc2626;
+            --bg: #f1f5f9; /* Slate 100 - Professional Off-White */
+            --card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.03) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.03) 0px, transparent 50%);
+        }
+
+        .navbar-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: var(--primary) !important;
+            font-size: 1.4rem;
+        }
+
+        .hero-section { padding: 60px 0; }
+        
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 3.8rem;
+            color: #0f172a;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+        }
+
+        .glass-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control-custom {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            color: var(--text-main);
+            padding: 1rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .form-control-custom:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+            outline: none;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 16px;
+            padding: 1.2rem 2.5rem;
+            font-weight: 700;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+        }
+
+        .score-gauge {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .circle-bg { fill: none; stroke: #f1f5f9; stroke-width: 3; }
+        .circle { fill: none; stroke-width: 3; stroke-linecap: round; transition: stroke-dasharray 1s ease; }
+        .percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2.2rem; font-weight: 800; color: var(--text-main); }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark py-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">NETGUARD AI</a>
+        </div>
+    </nav>
+
+    <div class="container hero-section text-center">
+        <h1>Secure Your <span style="color: var(--primary)">Digital Frontier</span></h1>
+        <p class="text-muted mb-5 fs-5">Advanced AI analysis to detect phishing threats in milliseconds.</p>
+
+        <div class="glass-card mx-auto" style="max-width: 700px;">
+            <form id="predictForm">
+                <div class="mb-4">
+                    <input type="text" id="urlInput" name="url" class="form-control-custom w-100" placeholder="Paste URL to analyze..." required>
+                </div>
+                <button type="submit" class="btn-primary-custom w-100 mb-4" id="scanBtn">
+                    <span id="btnText">ANALYZE URL</span>
+                    <span id="btnLoader" class="spinner-border spinner-border-sm d-none"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div class="modal fade" id="resultModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body p-5 text-center">
+                    <div id="modalUrl" class="text-muted small mb-3 text-truncate px-4"></div>
+                    <h3 id="modalResult" class="fw-bold mb-4"></h3>
+                    
+                    <div class="score-gauge">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            <path id="gaugeCircle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        </svg>
+                        <div id="modalPercentage" class="percentage">0%</div>
+                    </div>
+                    
+                    <p id="modalDesc" class="text-muted mb-4 small"></p>
+                    <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const form = document.getElementById('predictForm');
+        const modal = new bootstrap.Modal(document.getElementById('resultModal'));
+        
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const urlInput = document.getElementById('urlInput');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const scanBtn = document.getElementById('scanBtn');
+
+            // UI Loading state
+            btnText.textContent = 'ANALYZING...';
+            btnLoader.classList.remove('d-none');
+            scanBtn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('url', urlInput.value);
+
+                const response = await fetch('/predict_single', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Update Modal
+                    document.getElementById('modalUrl').textContent = data.url;
+                    const resEl = document.getElementById('modalResult');
+                    resEl.textContent = data.result.toUpperCase();
+                    resEl.className = data.result === 'Safe' ? 'fw-bold mb-4 text-success' : 'fw-bold mb-4 text-danger';
+                    
+                    const circle = document.getElementById('gaugeCircle');
+                    circle.style.stroke = data.percentage > 80 ? '#10b981' : (data.percentage > 50 ? '#f59e0b' : '#ef4444');
+                    circle.setAttribute('stroke-dasharray', `${data.percentage}, 100`);
+                    
+                    document.getElementById('modalPercentage').textContent = `${data.percentage}%`;
+                    document.getElementById('modalDesc').textContent = `Our AI model is ${data.percentage}% confident that this URL is ${data.result.toLowerCase()}.`;
+                    
+                    modal.show();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (err) {
+                alert('Connection failed. Is the server running?');
+            } finally {
+                btnText.textContent = 'ANALYZE URL';
+                btnLoader.classList.add('d-none');
+                scanBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
