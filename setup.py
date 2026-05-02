@@ -11,7 +11,7 @@ def get_requirments()->List[str]:
     '''
     requirments_lst:List[str]=[]
     try:
-        with open('requirments.txt','r') as file:
+        with open('requirements.txt','r') as file:
             # Read Line from the file 
             lines= file.readlines()
             # Process each line 
@@ -19,7 +19,7 @@ def get_requirments()->List[str]:
                 requirments = line.strip()
                 # ignore empty lines and -e .
                 if requirments and requirments!='-e .':
-                    requirments_lst.appen(requirments)
+                    requirments_lst.append(requirments)
     
     except FileNotFoundError:
         print("requirments.txt file not found")
