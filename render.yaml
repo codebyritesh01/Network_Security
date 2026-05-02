@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: network-security-app
+    env: docker
+    plan: free # or your preferred plan
+    region: oregon # or your preferred region
+    envVars:
+      - key: MONGODB_URL_KEY
+        sync: false # You will set this in the Render dashboard
+      - key: PORT
+        value: 8000

@@ -74,8 +74,8 @@ async def predict_single(request: Request, url: str = Form(...)):
         df = get_features_from_url(url)
         
         # Load model & preprocessor
-        preprocesor=load_object("final_model/preprocessor.pkl")
-        final_model=load_object("final_model/model.pkl")
+        preprocesor=load_object("Final_model/preprocessor.pkl")
+        final_model=load_object("Final_model/model.pkl")
         network_model = NetworkModel(preprocessor=preprocesor,model=final_model)
         
         # Predict Class and Probability
@@ -102,8 +102,8 @@ async def predict_route(request: Request,file: UploadFile = File(...)):
     try:
         df=pd.read_csv(file.file)
         #print(df)
-        preprocesor=load_object("final_model/preprocessor.pkl")
-        final_model=load_object("final_model/model.pkl")
+        preprocesor=load_object("Final_model/preprocessor.pkl")
+        final_model=load_object("Final_model/model.pkl")
         network_model = NetworkModel(preprocessor=preprocesor,model=final_model)
         print(df.iloc[0])
         y_pred = network_model.predict(df)
