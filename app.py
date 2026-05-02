@@ -1,6 +1,7 @@
 import sys
 import os 
 import traceback
+import uvicorn
 
 import certifi
 ca = certifi.where()
@@ -131,6 +132,5 @@ async def download_predict_file():
         raise NetworkSecurityException(e, sys)
     
 if __name__=="__main__":
-    import uvicorn
     uvicorn.run("app:app", host="localhost", port=8000, reload=True)
 
