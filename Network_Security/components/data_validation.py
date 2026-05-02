@@ -7,7 +7,6 @@ from Network_Security.entity.artifact_entity import DataValidationArtifact,DataI
 
 import os
 import sys
-import numpy as np
 import pandas as pd
 
 from scipy.stats import ks_2samp

@@ -1,6 +1,5 @@
 from Network_Security.constant.training_pipeline import SAVED_MODEL_DIR,MODEL_FILE_NAME
 
-import os
 import sys
 
 from Network_Security.exception.exception import NetworkSecurityException
@@ -28,4 +27,4 @@ class NetworkModel:
             y_proba = self.model.predict_proba(x_transform)
             return y_proba
         except Exception as e:
-            raise NetworkSecurityException(e, sys)
+            raise NetworkSecurityException(e, sys)

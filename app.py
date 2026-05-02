@@ -1,6 +1,5 @@
 import sys
 import os 
-import traceback
 import uvicorn
 
 import certifi

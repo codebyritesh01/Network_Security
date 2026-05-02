@@ -3,7 +3,6 @@ from Network_Security.exception.exception import NetworkSecurityException
 from Network_Security.logging.logger import logging
 import os,sys
 import numpy as np
-import dill
 import pickle
 
 from sklearn.metrics import r2_score
